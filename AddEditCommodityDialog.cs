@@ -25,6 +25,29 @@ namespace EliteDangerousTradingAssistant
             StationTextBox.Text = station;
             result = null;
             this.systems = systems;
+
+            InitializeCommoditiesAutoCompletion();
+        }
+
+        private void InitializeCommoditiesAutoCompletion()
+        {
+            var ac_source = new AutoCompleteStringCollection();
+            foreach (StarSystem system in systems)
+            {
+                foreach (Station station in system.Stations)
+                {
+                    foreach (Commodity commodity in station.Commodities)
+                    {
+                        if (!ac_source.Contains(commodity.Name))
+                        {
+                            ac_source.Add(commodity.Name);
+                        }
+                    }
+                }
+            }
+            CommodityTextBox.AutoCompleteCustomSource = ac_source;
+            CommodityTextBox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            CommodityTextBox.AutoCompleteSource = AutoCompleteSource.CustomSource;
         }
 
         public AddEditCommodityDialog(string system, string station, List<StarSystem> systems, Commodity commodity)
